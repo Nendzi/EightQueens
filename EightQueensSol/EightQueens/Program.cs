@@ -25,7 +25,7 @@ namespace EightQueens
                     Console.Write(count + ". ");
                 }
                 programLogic.EncodeSolution(solution);
-                programLogic.VisiulizeSolution(solution);
+                programLogic.VisualizeSolution(solution);
                 Console.WriteLine();
                 Console.WriteLine("____________________________________");
                 count++;
@@ -146,67 +146,64 @@ namespace EightQueens
 
             Console.WriteLine(output);
         }
-        internal void VisiulizeSolution(string solution)
+        internal string CellWidth(int count)
+        {
+            string output = "";
+            for (int i = 0; i < count; i++)
+            {
+                output += Convert.ToChar(0x2500);
+            }
+            return output;
+        }
+        const int cellLength = 3;
+        internal void VisualizeSolution(string solution)
         {
             //top border
             string row1 = "";
             row1 += Convert.ToChar(0x250C);
-            row1 += Convert.ToChar(0x2500);
-            row1 += Convert.ToChar(0x252C);
-            row1 += Convert.ToChar(0x2500);
-            row1 += Convert.ToChar(0x252C);
-            row1 += Convert.ToChar(0x2500);
-            row1 += Convert.ToChar(0x252C);
-            row1 += Convert.ToChar(0x2500);
-            row1 += Convert.ToChar(0x252C);
-            row1 += Convert.ToChar(0x2500);
-            row1 += Convert.ToChar(0x252C);
-            row1 += Convert.ToChar(0x2500);
-            row1 += Convert.ToChar(0x252C);
-            row1 += Convert.ToChar(0x2500);
-            row1 += Convert.ToChar(0x252C);
-            row1 += Convert.ToChar(0x2500);
-            row1 += Convert.ToChar(0x2510);
-
+            for (int i = 0; i < _numberOfQueens; i++)
+            {
+                row1 += CellWidth(cellLength);
+                if (i == _numberOfQueens - 1)
+                {
+                    row1 += Convert.ToChar(0x2510);
+                }
+                else
+                {
+                    row1 += Convert.ToChar(0x252C);
+                }
+            }
             // middle border
             string row3 = "";
             row3 += Convert.ToChar(0x251C);
-            row3 += Convert.ToChar(0x2500);
-            row3 += Convert.ToChar(0x253C);
-            row3 += Convert.ToChar(0x2500);
-            row3 += Convert.ToChar(0x253C);
-            row3 += Convert.ToChar(0x2500);
-            row3 += Convert.ToChar(0x253C);
-            row3 += Convert.ToChar(0x2500);
-            row3 += Convert.ToChar(0x253C);
-            row3 += Convert.ToChar(0x2500);
-            row3 += Convert.ToChar(0x253C);
-            row3 += Convert.ToChar(0x2500);
-            row3 += Convert.ToChar(0x253C);
-            row3 += Convert.ToChar(0x2500);
-            row3 += Convert.ToChar(0x253C);
-            row3 += Convert.ToChar(0x2500);
-            row3 += Convert.ToChar(0x2524);
+            for (int i = 0; i < _numberOfQueens; i++)
+            {
+                row3 += CellWidth(cellLength);
+                if (i == _numberOfQueens - 1)
+                {
+                    row3 += Convert.ToChar(0x2524);
+                }
+                else
+                {
+                    row3 += Convert.ToChar(0x253C);
+                }
+            }
 
             // bottom border
             string row4 = "";
             row4 += Convert.ToChar(0x2514);
-            row4 += Convert.ToChar(0x2500);
-            row4 += Convert.ToChar(0x2534);
-            row4 += Convert.ToChar(0x2500);
-            row4 += Convert.ToChar(0x2534);
-            row4 += Convert.ToChar(0x2500);
-            row4 += Convert.ToChar(0x2534);
-            row4 += Convert.ToChar(0x2500);
-            row4 += Convert.ToChar(0x2534);
-            row4 += Convert.ToChar(0x2500);
-            row4 += Convert.ToChar(0x2534);
-            row4 += Convert.ToChar(0x2500);
-            row4 += Convert.ToChar(0x2534);
-            row4 += Convert.ToChar(0x2500);
-            row4 += Convert.ToChar(0x2534);
-            row4 += Convert.ToChar(0x2500);
-            row4 += Convert.ToChar(0x2518);
+            for (int i = 0; i < _numberOfQueens; i++)
+            {
+                row4 += CellWidth(cellLength);
+                if (i == _numberOfQueens - 1)
+                {
+                    row4 += Convert.ToChar(0x2518);
+                }
+                else
+                {
+                    row4 += Convert.ToChar(0x2534);
+                }
+            }
 
             Console.WriteLine(row1);
             for (int i = 7; i >= 0; i--)
@@ -237,7 +234,9 @@ namespace EightQueens
             output += Convert.ToChar(0x2502);
             for (int i = 0; i < _numberOfQueens; i++)
             {
+                output += " ";
                 output += PutQueen(i, position, solution);
+                output += " ";
                 output += Convert.ToChar(0x2502);
             }
             Console.WriteLine(output);
