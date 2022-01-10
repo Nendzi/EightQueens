@@ -4,15 +4,24 @@ namespace EightQueens
 {
     class Program
     {
+        ProgramLogic _programLogic;
+
         static void Main()
         {
+            Program program = new Program();
             Console.WriteLine("Welcome. Application will find all solutions for you.");
-
-            ProgramLogic programLogic = new ProgramLogic(8);
-
-            Matrix perm = programLogic.FindAllPermutations();
-            List<string> solutions = programLogic.SearchForSolutions(perm);
-
+            program.Run();
+            Console.ReadLine();
+        }
+        private void Run()
+        {
+            _programLogic = new ProgramLogic(8);
+            Matrix perm = _programLogic.FindAllPermutations();
+            List<string> solutions = _programLogic.SearchForSolutions(perm);
+            ShowSolutions(solutions);
+        }
+        private void ShowSolutions(List<string> solutions)
+        {
             int count = 1;
             foreach (var solution in solutions)
             {
@@ -24,20 +33,20 @@ namespace EightQueens
                 {
                     Console.Write(count + ". ");
                 }
-                programLogic.EncodeSolution(solution);
-                programLogic.VisualizeSolution(solution);
+                _programLogic.EncodeSolution(solution);
+                _programLogic.VisualizeSolution(solution);
                 Console.WriteLine();
-                Console.WriteLine("____________________________________");
+                Console.WriteLine("_________________________________");
                 count++;
             }
-            Console.ReadLine();
         }
     }
     class ProgramLogic
     {
         private readonly int _numberOfQueens;
-        Matrix _chessBoard;
+        readonly Matrix _chessBoard;
         int _numberOfPermutation;
+        private const int _cellLength = 3;
 
         public ProgramLogic(int numberOfQueens)
         {
@@ -82,6 +91,7 @@ namespace EightQueens
             }
             return output;
         }
+        #region Private methods
         private void StrikeThroughFields(int row, int column)
         {
             int zeroBasedNumberOfElements = _numberOfQueens - 1;
@@ -155,69 +165,39 @@ namespace EightQueens
             }
             return output;
         }
-        const int cellLength = 3;
         internal void VisualizeSolution(string solution)
         {
-            //top border
-            string row1 = "";
-            row1 += Convert.ToChar(0x250C);
-            for (int i = 0; i < _numberOfQueens; i++)
-            {
-                row1 += CellWidth(cellLength);
-                if (i == _numberOfQueens - 1)
-                {
-                    row1 += Convert.ToChar(0x2510);
-                }
-                else
-                {
-                    row1 += Convert.ToChar(0x252C);
-                }
-            }
-            // middle border
-            string row3 = "";
-            row3 += Convert.ToChar(0x251C);
-            for (int i = 0; i < _numberOfQueens; i++)
-            {
-                row3 += CellWidth(cellLength);
-                if (i == _numberOfQueens - 1)
-                {
-                    row3 += Convert.ToChar(0x2524);
-                }
-                else
-                {
-                    row3 += Convert.ToChar(0x253C);
-                }
-            }
-
-            // bottom border
-            string row4 = "";
-            row4 += Convert.ToChar(0x2514);
-            for (int i = 0; i < _numberOfQueens; i++)
-            {
-                row4 += CellWidth(cellLength);
-                if (i == _numberOfQueens - 1)
-                {
-                    row4 += Convert.ToChar(0x2518);
-                }
-                else
-                {
-                    row4 += Convert.ToChar(0x2534);
-                }
-            }
-
-            Console.WriteLine(row1);
+            Console.WriteLine(DrawBorder(new int[] { 0x250C, 0x2510, 0x252C }));
             for (int i = 7; i >= 0; i--)
             {
                 FormRowOnChessBoard(i, solution);
                 if (i == 0)
                 {
-                    Console.WriteLine(row4);
+                    Console.WriteLine(DrawBorder(new int[] { 0x2514, 0x2518, 0x2534 }));
                 }
                 else
                 {
-                    Console.WriteLine(row3);
+                    Console.WriteLine(DrawBorder(new int[] { 0x251C, 0x2524, 0x253C }));
                 }
             }
+        }
+        private string DrawBorder(int[] borderElements)
+        {
+            string output = "";
+            output += Convert.ToChar(borderElements[0]);
+            for (int i = 0; i < _numberOfQueens; i++)
+            {
+                output += CellWidth(_cellLength);
+                if (i == _numberOfQueens - 1)
+                {
+                    output += Convert.ToChar(borderElements[1]);
+                }
+                else
+                {
+                    output += Convert.ToChar(borderElements[2]);
+                }
+            }
+            return output;
         }
         private string PutQueen(int location, int position, string solution)
         {
@@ -241,5 +221,6 @@ namespace EightQueens
             }
             Console.WriteLine(output);
         }
+        #endregion
     }
 }
