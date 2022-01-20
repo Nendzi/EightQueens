@@ -6,7 +6,7 @@ Put eight queens on chess board without attacking each other
 3. Make simple visualization for each solution
 
 Application has found 92 solutions, but these solutions are not indipendent.
-Next tast is:
+Next task is:
 
 4. Find vertically and horizontaly mirrored solutions.
 5. Find 90 deg rotated solutions.
