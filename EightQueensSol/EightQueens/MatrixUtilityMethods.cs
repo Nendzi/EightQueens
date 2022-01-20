@@ -12,17 +12,41 @@ namespace EightQueens
         // such as state of matrix, visualization etc
 
         private readonly int _numberOfQueens;
-        readonly Matrix _chessBoard ;
+        private readonly Matrix _chessBoard;
         private const int _cellLength = 3;
 
-        public MatrixUtilityMethods(int _numberOfQueens)
-        {
-            this._numberOfQueens = _numberOfQueens;
-            this._chessBoard = new Matrix(_numberOfQueens);
-            
-        }
+        internal delegate Position RotateExistingSolution(int position, int valueOnPosition);
 
-        public void StrikeThroughFields(int row, int column)
+        internal RotateExistingSolution _setOn90deg = new(Rotate90deg);
+        internal RotateExistingSolution _setOn180deg = new(Rotate180deg);
+        internal RotateExistingSolution _setOn270deg = new(Rotate270deg);
+        static Position Rotate90deg(int position, int valueOnPosition)
+        {
+            Position queenPosition = new Position();
+            queenPosition.position = 7 - valueOnPosition;
+            queenPosition.valueOnPosition=Convert.ToChar((position).ToString());
+            return queenPosition;
+        }
+        static Position Rotate180deg(int position, int valueOnPosition)
+        {
+            Position queenPosition = new Position();
+            queenPosition.position = 7 - position;
+            queenPosition.valueOnPosition = Convert.ToChar((7 - valueOnPosition).ToString());
+            return queenPosition;
+        }
+        static Position Rotate270deg(int position, int valueOnPosition)
+        {
+            Position queenPosition = new Position();
+            queenPosition.position = valueOnPosition;
+            queenPosition.valueOnPosition = Convert.ToChar((7 - position).ToString());
+            return queenPosition;
+        }
+        internal MatrixUtilityMethods(int numberOfQueens)
+        {
+            _numberOfQueens = numberOfQueens;
+            _chessBoard = new Matrix(numberOfQueens);
+        }
+        internal void StrikeThroughFields(int row, int column)
         {
             int zeroBasedNumberOfElements = _numberOfQueens - 1;
             int maxRow = ((zeroBasedNumberOfElements - row) < row) ? row : zeroBasedNumberOfElements - row;
@@ -49,15 +73,7 @@ namespace EightQueens
                 AttackField(rowDown, columnRight);
             }
         }
-        public void AttackField(int row, int column)
-        {
-            if (row < 0 || row >= _numberOfQueens || column < 0 || column >= _numberOfQueens)
-            {
-                return;
-            }
-            _chessBoard.item[row, column]++;
-        }
-        public bool FieldIsEmpty(int row, int column)
+        internal bool FieldIsEmpty(int row, int column)
         {
             if (_chessBoard.item[row, column] != 0)
             {
@@ -65,7 +81,7 @@ namespace EightQueens
             }
             return true;
         }
-        public void ClearTable()
+        internal void ClearTable()
         {
             for (int i = 0; i < _numberOfQueens; i++)
             {
@@ -75,7 +91,70 @@ namespace EightQueens
                 }
             }
         }
-        public void EncodeSolution(string solution)
+        internal void AttackField(int row, int column)
+        {
+            if (row < 0 || row >= _numberOfQueens || column < 0 || column >= _numberOfQueens)
+            {
+                return;
+            }
+            _chessBoard.item[row, column]++;
+        }
+        internal string GetRotated90degCCW(string inputData)
+        {
+            char[] output = FindDependentSolution(inputData, _setOn90deg);
+            return JoinChar(output);
+        }
+        internal string GetRotated180degCCW(string inputData)
+        {
+            char[] output = FindDependentSolution(inputData, _setOn180deg);
+            return JoinChar(output);
+        }
+        internal string GetRotated270degCCW(string inputData)
+        {
+            char[] output = FindDependentSolution(inputData, _setOn270deg);
+            return JoinChar(output);
+        }
+        internal static char[] FindDependentSolution(string inputData, RotateExistingSolution setCharOnPosition)
+        {
+            char[] output = new char[inputData.Length];
+            Position position1 = new Position(); 
+            for (int i = 0; i < inputData.Length; i++)
+            {
+                int position = i;
+                int valueOnPosition = Convert.ToInt32(inputData[i].ToString());
+                position1 = setCharOnPosition.Invoke(position,valueOnPosition);
+                output[position1.position] = position1.valueOnPosition;
+            }
+            return output;
+        }
+        internal static string JoinChar(char[] input)
+        {
+            string output = "";
+            for (int i = 0; i < input.Length; i++)
+            {
+                output += input[i].ToString();
+            }
+            return output;
+        }
+        internal static string GetVerticalyMirrored(string inputData)
+        {
+            string output = "";
+            foreach (char item in inputData)
+            {
+                output += (7 - Convert.ToInt32(item.ToString())).ToString();
+            }
+            return output;
+        }
+        internal static string GetHorizontalyMirrored(string inputData)
+        {
+            string output = "";
+            foreach (var myChar in inputData.Reverse())
+            {
+                output += myChar.ToString();
+            }
+            return output;
+        }
+        internal static void EncodeSolution(string solution)
         {
             string output = "";
 
@@ -86,7 +165,7 @@ namespace EightQueens
 
             Console.WriteLine(output);
         }
-        public string CellWidth(int count)
+        internal static string CellWidth(int count)
         {
             string output = "";
             for (int i = 0; i < count; i++)
@@ -111,7 +190,7 @@ namespace EightQueens
                 }
             }
         }
-        public string DrawBorder(int[] borderElements)
+        internal string DrawBorder(int[] borderElements)
         {
             string output = "";
             output += Convert.ToChar(borderElements[0]);
@@ -129,7 +208,7 @@ namespace EightQueens
             }
             return output;
         }
-        public string PutQueen(int location, int position, string solution)
+        internal static string PutQueen(int location, int position, string solution)
         {
             int extract = Convert.ToInt32(solution[location].ToString());
             if (position == extract)
@@ -138,7 +217,7 @@ namespace EightQueens
             }
             return " ";
         }
-        public void FormRowOnChessBoard(int position, string solution)
+        internal void FormRowOnChessBoard(int position, string solution)
         {
             string output = "";
             output += Convert.ToChar(0x2502);
@@ -150,6 +229,11 @@ namespace EightQueens
                 output += Convert.ToChar(0x2502);
             }
             Console.WriteLine(output);
+        }
+        internal class Position
+        {
+            internal int position;
+            internal char valueOnPosition;
         }
     }
 }

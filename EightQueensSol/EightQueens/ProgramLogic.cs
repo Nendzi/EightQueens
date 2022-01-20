@@ -15,7 +15,7 @@ namespace EightQueens
         int _numberOfPermutation;
         MatrixUtilityMethods _utilityMethods;
 
-        public ProgramLogic(int numberOfQueens,MatrixUtilityMethods utilityMethods)
+        public ProgramLogic(int numberOfQueens, MatrixUtilityMethods utilityMethods)
         {
             _numberOfQueens = numberOfQueens;
             /*_chessBoard = new Matrix(_numberOfQueens);*/
@@ -59,8 +59,27 @@ namespace EightQueens
             }
             return output;
         }
-       /* #region Private methods
-        
-        #endregion*/
+
+        public List<string> FindAndClearDependentSolutions(List<string> solutions)
+        {
+            int removed = 0;
+            for (int i = 0; i < solutions.Count; i++)
+            {
+                string horizontalyMirrored = MatrixUtilityMethods.GetHorizontalyMirrored(solutions[i]);
+                string verticalyMirrored = MatrixUtilityMethods.GetVerticalyMirrored(solutions[i]);
+                string rotate90degCCW = _utilityMethods.GetRotated90degCCW(solutions[i]);
+                string rotate180degCCW = _utilityMethods.GetRotated180degCCW(solutions[i]);
+                string rotate270degCCW = _utilityMethods.GetRotated270degCCW(solutions[i]);
+                removed += solutions.RemoveAll(x => x == horizontalyMirrored);
+                removed += solutions.RemoveAll(x => x == verticalyMirrored);
+                removed += solutions.RemoveAll(x => x == rotate90degCCW);
+                removed += solutions.RemoveAll(x => x == rotate180degCCW);
+                removed += solutions.RemoveAll(x => x == rotate270degCCW);
+            }
+            return solutions;
+        }
+        #region Private methods
+
+        #endregion
     }
 }

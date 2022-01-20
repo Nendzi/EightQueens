@@ -19,7 +19,8 @@ namespace EightQueens
             _programLogic = new ProgramLogic(8,_utilityMethods);
             Matrix perm = _programLogic.FindAllPermutations();
             List<string> solutions = _programLogic.SearchForSolutions(perm);
-            ShowSolutions(solutions);
+            List<string> filteredSolutions = _programLogic.FindAndClearDependentSolutions(solutions);
+            ShowSolutions(filteredSolutions);
         }
         private void ShowSolutions(List<string> solutions)
         {
@@ -34,7 +35,7 @@ namespace EightQueens
                 {
                     Console.Write(count + ". ");
                 }
-                _utilityMethods.EncodeSolution(solution);
+                MatrixUtilityMethods.EncodeSolution(solution);
                 _utilityMethods.VisualizeSolution(solution);
                 Console.WriteLine();
                 Console.WriteLine("_________________________________");
